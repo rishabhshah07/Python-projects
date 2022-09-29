@@ -1,0 +1,50 @@
+import cv2
+import numpy as np
+
+filename= "video.avi" #avi is the format like mp4
+frame_per_seconds = 24.0
+resolution = "1080p" # depends on you accessed camera larger pixels make large files 
+
+
+def change_res(cap,width,height):
+    cap.set(3,width)
+    cap.set(4,height)
+
+#standard dimension sizes
+
+std_dim ={
+
+    "480p":(640,480),
+    "720p":(1280,720),
+    "1080p":(1920,1080),
+    "4K":(3840,2160)
+}
+
+def get_dim(cap,res="1080p"):
+    width, height= std_dim["480p"]
+    if res in std_dim:
+        width, height= std_dim[res]
+    change_res(cap,width, height)
+    return width, height
+
+
+
+
+
+cap = cv2.VideoCapture(0)
+
+
+dims = get_dim(cap,res= resolution)
+
+while(True):
+    #capture frame by frame
+    ret, frame = cap.read()
+
+    #display the resulting frame
+    cv2.imshow("frame",frame)
+    if cv2.waitKey(20) & 0xFF == ord("q"):
+        break
+
+#everything done so relaese the capture
+cap.release()
+cv2.destroyAllWindows()
